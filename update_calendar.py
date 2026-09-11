@@ -16,6 +16,45 @@ ET=ZoneInfo('America/New_York')
 UTC=timezone.utc
 
 
+TEAM_ABBR = {
+    'Arizona Cardinals': 'ARI',
+    'Atlanta Falcons': 'ATL',
+    'Baltimore Ravens': 'BAL',
+    'Buffalo Bills': 'BUF',
+    'Carolina Panthers': 'CAR',
+    'Chicago Bears': 'CHI',
+    'Cincinnati Bengals': 'CIN',
+    'Cleveland Browns': 'CLE',
+    'Dallas Cowboys': 'DAL',
+    'Denver Broncos': 'DEN',
+    'Detroit Lions': 'DET',
+    'Green Bay Packers': 'GB',
+    'Houston Texans': 'HOU',
+    'Indianapolis Colts': 'IND',
+    'Jacksonville Jaguars': 'JAX',
+    'Kansas City Chiefs': 'KC',
+    'Las Vegas Raiders': 'LV',
+    'Los Angeles Chargers': 'LAC',
+    'Los Angeles Rams': 'LAR',
+    'Miami Dolphins': 'MIA',
+    'Minnesota Vikings': 'MIN',
+    'New England Patriots': 'NE',
+    'New Orleans Saints': 'NO',
+    'New York Giants': 'NYG',
+    'New York Jets': 'NYJ',
+    'Philadelphia Eagles': 'PHI',
+    'Pittsburgh Steelers': 'PIT',
+    'San Francisco 49ers': 'SF',
+    'Seattle Seahawks': 'SEA',
+    'Tampa Bay Buccaneers': 'TB',
+    'Tennessee Titans': 'TEN',
+    'Washington Commanders': 'WAS',
+}
+
+
+def abbr(team):
+    return TEAM_ABBR.get(team, team)
+
 def slug(s):
     s=s.lower().replace('&','and')
     s=re.sub(r'[^a-z0-9]+','-',s).strip('-')
@@ -119,7 +158,7 @@ def make_event(g, meta, full_location, now, seq):
         lines += [prop('DTSTART;VALUE=DATE',start.strftime('%Y%m%d')),
                   prop('DTEND;VALUE=DATE',end.strftime('%Y%m%d')),
                   prop('STATUS','TENTATIVE'), prop('TRANSP','TRANSPARENT')]
-        summary=f"⚠️ TBD — NFL Week {g['RoundNumber']} — {g['AwayTeam']} @ {g['HomeTeam']}"
+        summary=f"⚠️ TBD — NFL Week {g['RoundNumber']} — {abbr(g['AwayTeam'])} @ {abbr(g['HomeTeam'])}"
         cats=f"NFL,Football,Week {g['RoundNumber']},TBD/Flex"
         desc=(f"{g['AwayTeam']} at {g['HomeTeam']}\nNFL Week {g['RoundNumber']}\nVenue: {g['Location']}\n"
               "Exact date/kickoff is still subject to NFL late-season scheduling. This subscribed calendar will update when the upstream schedule changes.\n"
@@ -132,7 +171,7 @@ def make_event(g, meta, full_location, now, seq):
                   prop('DTEND',enddt.strftime('%Y%m%dT%H%M%SZ')),
                   prop('STATUS','CONFIRMED'), prop('TRANSP','OPAQUE')]
         label=special_label(g,source_dt,full_location,unchanged,meta)
-        summary=f"🏈 {label} — {g['AwayTeam']} @ {g['HomeTeam']}"
+        summary=f"🏈 {label} — {abbr(g['AwayTeam'])} @ {abbr(g['HomeTeam'])}"
         cats=f"NFL,Football,Week {g['RoundNumber']}"
         if 'Night Football' in label: cats += ','+label
         if label=='International Game': cats += ',International Game,International'
